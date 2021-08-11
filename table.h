@@ -16,6 +16,18 @@ struct opfish {
   unsigned long long shark;
 };
 */
+enum type {
+  salmon = 1,
+  tuna = 2,
+  cod = 3,
+  mackerel = 4,
+  haddock = 5,
+  carp = 7,
+  trout = 8,
+  whale = 9,
+  shark = 10
+};
+
 const char * tiername[16] = {
   "string", "wood", "bamboo", "ice",
   "brick", "stone", "iron", "copper",
