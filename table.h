@@ -1,33 +1,3 @@
-/*
-struct fish {
-  // w h a t
-  long int unsigned long salmon;
-  long long int unsigned tuna;
-  unsigned long int long cod;
-  int long unsigned long mackerel;
-  long int long unsigned haddock;
-  unsigned char next;
-};
-
-struct opfish {
-  unsigned long long carp;
-  long unsigned long trout;
-  long long unsigned whale;
-  unsigned long long shark;
-};
-*/
-enum type {
-  salmon = 1,
-  tuna = 2,
-  cod = 3,
-  mackerel = 4,
-  haddock = 5,
-  carp = 7,
-  trout = 8,
-  whale = 9,
-  shark = 10
-};
-
 const char * tiername[16] = {
   "string", "wood", "bamboo", "ice",
   "brick", "stone", "iron", "copper",
@@ -46,6 +16,8 @@ const char * fish[10] = {
   "salmon", "tuna", "cod", "mackerel", "haddock", NULL, "carp", "trout", "whale", "shark"
 };
 
+// level 0-10 values sum to 1
+// level 11 onwards values sum to 2
 const float lv0[7] = {0.1916, 0, 0, 0.3084, 0, 0, 0.5};
 const float lv1[7] = {0.1207, 0.4681, 0.2112, 0, 0, 0, 0.2};
 const float lv2[7] = {0.2222, 0.4512, 0.1958, 0, 0.0308, 0, 0.1};
@@ -64,3 +36,6 @@ const float lv14[11] = {0.399, 0, 0, 0, 0, 0.351, 0.25, 0.5, 0.369, 0.1904, 0.14
 const float lv15[12] = {0, 0.06, 0.12, 0.17, 0.25, 0.3, 0.1, 0.25, 0.25, 0.25, 0.25};
 
 const float * clump[16] = {lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12, lv13, lv14, lv15};
+
+const int sale[4] = {15, 25, 40, 70};
+

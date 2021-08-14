@@ -1,5 +1,6 @@
 double total;
-int to_buy;
+int to_buy, to_sell, i;
+bool has_some = false;
 
 void market() {
   printf("You have $%zu. You have %zu bait.\n\n\n", money, bait);
@@ -19,42 +20,41 @@ void market() {
   } else {
     printf("You can't afford any bait. Bait costs $21 per piece. You currently have $%zu.\n", money);
   }
-}
 
-/*
-if (!(Object.values(opfish).every(ky => ky === 0))) {
-  console.log("\n\n\n\nIt seems as if you have some big fish to sell. Here is what you have:");
-
-  for (const bigfish in opfish) {
-    console.log(`You have ${opfish[bigfish]} ${bigfish}, which you can sell for \$${sellprice[bigfish]} per piece`);
-  }
-
-  console.log("What would you like to sell?");
-
-  Object.keys(opfish).forEach((itm, ix) => {
-    console.log(`\tPress ${ix+1} to sell ${itm},`);
-  });
-  console.log("Or press enter to not sell anything.");
-
-  let ip = rl.question("> ");
-  try {
-    if (ip === "") throw "e";
-    ip = Number(ip) - 1;
-    const inq = Object.keys(opfish)[ip];
-
-    if (ip >= inq.length) throw ip;
-
-    const amnt = Number(rl.question(`How much ${inq} would you like to sell? (you currently have ${opfish[inq]})`));
-
-    if (amnt > opfish[inq]) {
-      console.log(`You don't have that much ${inq}!`);
-      throw ammt;
-    } else {
-      opfish[inq] -= amnt;
-      money += sellprice[inq] * amnt;
+  for (i = 5, has_some = false; i < 9; ++i) {
+    if (data[i] != 0) {
+      has_some = true;
     }
-  } catch (e) {
-    console.log("\x1b[38;5;1mDEBUG: Not selling anything.\x1b[0m", e);
+  }
+
+  if (has_some) {
+    printf("\n\n\n\nIt seems as if you have some big fish to sell. Here is what you have:\n");
+
+    for (i = 7; i < 11; ++i) {
+      printf("You have %zu %s, which you can sell for $%d per piece.\n", data[i-2], fish[i-1], sale[i-7]);
+    }
+
+    printf("What would you like to sell?\n");
+
+    for (i = 7; i < 11; ++i) {
+      printf("\tPress %d to sell %s,\n", i - 6, fish[i-1]);
+    }
+    printf("Or press 0 to not sell anything.\n> ");
+
+    scanf("%d", &choice);
+    if (choice > 0 && choice < 5) {
+      printf("How much %s would you like to sell? (you currently have %zu) ", fish[choice + 5], data[choice + 4]);
+      scanf("%d", &to_sell);
+
+      if (to_sell > data[choice + 4]) {
+        printf("You don't have that much $s!", fish[choice + 5]);
+        return;
+      } else {
+        data[choice + 4] -= to_sell;
+        money += sale[choice - 1] * to_sell;
+      }
+    } else {
+      printf("Not selling anything.\n");
+    }
   }
 }
-*/
