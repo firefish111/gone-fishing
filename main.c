@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include <conio.h>
+#include <conio.h> // needs this for getch() which is used instead of getchar()
 #include "table.h"
 
 unsigned char tier = 0x0;
@@ -14,9 +14,7 @@ size_t bait = 0;
 size_t * data;
 
 #include "cast.h"
-#include "market.h" // Is there a reason it's down here? - dark
-// yes, it will otherwise complain that money and data don't exist
-
+#include "market.h"
 
 int main(void) {
   srand(time(NULL));
@@ -34,8 +32,6 @@ int main(void) {
     printf("Please type your save here.\n> ");
     scanf("%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu", &tier, &money, &data[0], &data[1], &data[2], &data[3], &data[4], &data[5], &data[6], &data[7], &data[8], &bait);
   }
-
-  //clrscr();
 
   printf("You start with a %s rod!\n", rodname[tier]);
   do {
