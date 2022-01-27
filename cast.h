@@ -68,9 +68,9 @@ void cast() {
 
   } else if (catch == 6) {
     if (tier == 15) {
-      j = (rand() % 10) * 10;
+      j = (rand() % 10 + 1) * 10;
       money += j;
-      printf("You take the $%d.\n", j);
+      printf("You take the (slightly wet) stack of $%d.\n", j);
     } else {
       j = (rand() % 5) + 1;
       money += j;

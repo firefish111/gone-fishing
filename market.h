@@ -3,12 +3,18 @@ int to_buy, to_sell, i;
 bool has_some = false;
 
 void market() {
-  printf("You have $%zu. You have %zu bait.\n\n\n", money, bait);
+  for (i = 0; i < 5; ++i) {
+    printf("You have %zu %s.\n", data[i], fish[i]);
+  } for (i = 7; i < 11; ++i) {
+    printf("You have %zu %s, which you can sell for $%d per piece.\n", data[i-2], fish[i-1], sale[i-7]);
+  }
+
+  printf("\n\nYou also have $%zu, and %zu bait.\n", money, bait);
 
   total = floor((double) money / (double) COST);
 
   if (money >= COST) {
-    printf("\n\n\nYou can buy %g bait.\nHow much bait would you like to buy? ", total);
+    printf("\nYou can buy %g bait.\nHow much bait would you like to buy? ", total);
     scanf("%d", &to_buy);
 
     if (to_buy <= total) {
@@ -28,11 +34,7 @@ void market() {
   }
 
   if (has_some) {
-    printf("\n\n\n\nIt seems as if you have some big fish to sell. Here is what you have:\n");
-
-    for (i = 7; i < 11; ++i) {
-      printf("You have %zu %s, which you can sell for $%d per piece.\n", data[i-2], fish[i-1], sale[i-7]);
-    }
+    printf("\nIt seems as if you have some big fish to sell.\n");
 
     printf("What would you like to sell?\n");
 

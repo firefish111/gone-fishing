@@ -23,11 +23,11 @@ int main(void) {
   fflush(stdout);
   choice = getch();
   fflush(stdin);
-  
+
   data = (size_t *) calloc(sizeof(size_t), LEN);
 
   printf("\n");
-  
+
   if (choice == 'y' || choice == 'Y') {
     printf("Please type your save here.\n> ");
     scanf("%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu", &tier, &money, &data[0], &data[1], &data[2], &data[3], &data[4], &data[5], &data[6], &data[7], &data[8], &bait);
@@ -55,5 +55,5 @@ int main(void) {
   } while (1);
 
   // how the hell did you get here
-  return 1;
+  return 0;
 }
