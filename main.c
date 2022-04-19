@@ -5,20 +5,30 @@
 #include <conio.h> // needs this for getch() which is used instead of getchar()
 #include "table.h"
 
+// semver version; insert dots after each digit
+const size_t VER = 200;
+
 unsigned char tier = 0x0;
 const int LEN = 9;
 const int COST = 21;
 int choice;
+int i;
 size_t money = 0;
 size_t bait = 0;
 size_t * data;
+size_t * tempBuf;
+FILE * savefile;
 
 #include "cast.h"
 #include "market.h"
 
 int main(void) {
   srand(time(NULL));
-  printf("Do you have a save? [y/N] ");
+
+  printf("Gone Fishing v%zu.%zu.%zu. Copyright @firefish 2022.\n\n", VER / 100, (VER / 10) % 10, VER % 10);
+
+  start:
+  printf("Save loading options:\n\t[f] Load save from file\n\t[t] Type/Paste save in\n\t[c] Create new save (default)\n");
 
   fflush(stdout);
   choice = getch();
@@ -28,14 +38,49 @@ int main(void) {
 
   printf("\n");
 
-  if (choice == 'y' || choice == 'Y') {
+  if (choice == 'f' || choice == 'F') {
+    savefile = fopen("GONEFISH.SAV", "rb");
+    if (!savefile) {
+      printf("Savefile does not exist. Returning to menu.\n");
+      fclose(savefile);
+      goto start;
+    }
+
+    // read from file: the format is just a binary file including all the numbers in the save string, in that order, as size_t.
+    // this makes this incompatible between 16-bit and 32-bit systems, but do I care? no
+    // on second thought it actually is compatible
+    tempBuf = calloc(sizeof(size_t), LEN + 4);
+    fread(tempBuf, sizeof(size_t), LEN + 4, savefile);
+
+    // file format understander
+    if (tempBuf[0] > VER) {
+      printf("You're trying to import a save from a newer version of Gone Fishing (%zu.%zu.%zu).\n\tAre you sure you want to import? (y/N)\n", tempBuf[0] / 100, (tempBuf[0] / 10) % 10, tempBuf[0] % 10);
+
+      fflush(stdout);
+      choice = getch();
+      fflush(stdin);
+
+      if (!(choice == "y" || choice == "Y")) {
+        printf("Returning to menu.\n");
+        goto start;
+      }
+    }
+    tier = (unsigned char) tempBuf[1];
+    money = tempBuf[2];
+    bait = tempBuf[LEN + 3];
+    for (i = 0; i < LEN; ++i) {
+      data[i] = tempBuf[i + 3];
+    }
+    free(tempBuf);
+    fclose(savefile);
+  } else if (choice == 't' || choice == 'T') {
     printf("Please type your save here.\n> ");
     scanf("%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu", &tier, &money, &data[0], &data[1], &data[2], &data[3], &data[4], &data[5], &data[6], &data[7], &data[8], &bait);
   }
 
   printf("You start with a %s rod!\n", rodname[tier]);
   do {
-    printf("Press enter to fish, m to go to the market, or x to save and exit. ");
+    printf("Press [enter] to fish, [m] to go to the market, or [x] to save and exit. ");
     fflush(stdout);
     choice = getch();
     fflush(stdin);
@@ -46,8 +91,33 @@ int main(void) {
       market();
       break;
     case 'x':
-      printf("\n\nHere is your save:\n\n\n%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu\n", tier, money, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], bait);
-      free(data); // it's only 18/36/72 bytes but it matters
+      printf("Where would you like your save?\n\t[f] to save to file (default) (THIS OVERRIDES YOUR CURRENT SAVE)\n\t[t] to return save string as text.\n");
+
+      fflush(stdout);
+      choice = getch();
+      fflush(stdin);
+
+      if (choice == "t" || choice == "T"){
+        printf("\n\nHere is your save:\n\n\n%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu\n", tier, money, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], bait);
+        return 0;
+      }
+
+      savefile = fopen("GONEFISH.SAV", "wb");
+      tempBuf = calloc(sizeof(size_t), LEN + 4);
+
+      tempBuf[0] = VER;
+      tempBuf[1] = (size_t) tier;
+      tempBuf[2] = money;
+      tempBuf[LEN + 3] = bait;
+
+      for (i = 0; i < LEN; ++i) {
+        tempBuf[i + 3] = data[i];
+      }
+
+      fwrite(tempBuf, sizeof(size_t), LEN + 4, savefile);
+
+      free(tempBuf);
+      free(data); // it's only 18 bytes but it matters
       return 0;
     default:
       cast();
