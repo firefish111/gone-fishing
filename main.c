@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <unistd.h>
 #include <conio.h> // needs this for getch() which is used instead of getchar()
 #include "table.h"
 
 // semver version; insert dots after each digit
-const size_t VER = 200;
+const size_t VER = 201;
 
 unsigned char tier = 0x0;
 const int LEN = 9;
@@ -27,8 +28,9 @@ int main(void) {
 
   printf("Gone Fishing v%zu.%zu.%zu. Copyright @firefish 2022.\n\n", VER / 100, (VER / 10) % 10, VER % 10);
 
+  i = access("GONEFISH.SAV", 0); // F_OK ain't defined, so we use good ol' fashioned 0
   start:
-  printf("Save loading options:\n\t[f] Load save from file\n\t[t] Type/Paste save in\n\t[c] Create new save (default)\n");
+  printf("Save loading options:\n\t[f] Load save from file %s\n\t[t] Type/Paste save in\n\t[c] Create new save %s\n", i != -1 ? "(default)" : "", i == -1 ? "(default)" : "");
 
   fflush(stdout);
   choice = getch();
@@ -38,7 +40,12 @@ int main(void) {
 
   printf("\n");
 
-  if (choice == 'f' || choice == 'F') {
+  if (choice == 't' || choice == 'T') {
+    printf("Please type your save here.\n> ");
+    scanf("%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu", &tier, &money, &data[0], &data[1], &data[2], &data[3], &data[4], &data[5], &data[6], &data[7], &data[8], &bait);
+  } else if (choice == 'c' || choice == 'C') {
+    // haha get fooled
+  } else if ((choice == 'f' || choice == 'F') || (i != -1)) {
     savefile = fopen("GONEFISH.SAV", "rb");
     if (!savefile) {
       printf("Savefile does not exist. Returning to menu.\n");
@@ -60,7 +67,7 @@ int main(void) {
       choice = getch();
       fflush(stdin);
 
-      if (!(choice == "y" || choice == "Y")) {
+      if (!(choice == 'y' || choice == 'Y')) {
         printf("Returning to menu.\n");
         goto start;
       }
@@ -73,9 +80,6 @@ int main(void) {
     }
     free(tempBuf);
     fclose(savefile);
-  } else if (choice == 't' || choice == 'T') {
-    printf("Please type your save here.\n> ");
-    scanf("%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu", &tier, &money, &data[0], &data[1], &data[2], &data[3], &data[4], &data[5], &data[6], &data[7], &data[8], &bait);
   }
 
   printf("You start with a %s rod!\n", rodname[tier]);
@@ -88,16 +92,19 @@ int main(void) {
     printf("\n");
     switch (choice) {
     case 'm':
+    case 'M':
       market();
       break;
     case 'x':
-      printf("Where would you like your save?\n\t[f] to save to file (default) (THIS OVERRIDES YOUR CURRENT SAVE)\n\t[t] to return save string as text.\n");
+    case 'X':
+      i = access("GONEFISH.SAV", 0); // F_OK isn't here either :(
+      printf("Where would you like your save?\n\t[f] to save to file (default) %s\n\t[t] to return save string as text.\n", i != -1 ? "(THIS OVERRIDES YOUR CURRENT SAVE)" : "");
 
       fflush(stdout);
       choice = getch();
       fflush(stdin);
 
-      if (choice == "t" || choice == "T"){
+      if (choice == 't' || choice == 'T'){
         printf("\n\nHere is your save:\n\n\n%01x$%zu[%zu:%zu:%zu:%zu:%zu][%zu:%zu:%zu:%zu]%zu\n", tier, money, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], bait);
         return 0;
       }

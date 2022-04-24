@@ -5,8 +5,12 @@ bool has_some = false;
 void market() {
   for (i = 0; i < 5; ++i) {
     printf("You have %zu %s.\n", data[i], fish[i]);
-  } for (i = 7; i < 11; ++i) {
-    printf("You have %zu %s, which you can sell for $%d per piece.\n", data[i-2], fish[i-1], sale[i-7]);
+  }
+
+  if (tier >= 11) {
+    for (i = 7; i < 11; ++i) {
+      printf("You have %zu %s, which you can sell for $%d per piece.\n", data[i-2], fish[i-1], sale[i-7]);
+    }
   }
 
   printf("\n\nYou also have $%zu, and %zu bait.\n", money, bait);
@@ -49,7 +53,7 @@ void market() {
       scanf("%d", &to_sell);
 
       if (to_sell > data[choice + 4]) {
-        printf("You don't have that much $s!", fish[choice + 5]);
+        printf("You don't have that much %s!\n", fish[choice + 5]);
         return;
       } else {
         data[choice + 4] -= to_sell;
