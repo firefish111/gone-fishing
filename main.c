@@ -7,7 +7,7 @@
 #include "table.h"
 
 // semver version; insert dots after each digit
-const size_t VER = 201;
+const size_t VER = 202;
 
 unsigned char tier = 0x0;
 const int LEN = 9;
@@ -23,10 +23,13 @@ FILE * savefile;
 #include "cast.h"
 #include "market.h"
 
-int main(void) {
+int main(int argc, char** argv) {
+  // save destructuror
+  #include "destruct.h"
+
   srand(time(NULL));
 
-  printf("Gone Fishing v%zu.%zu.%zu. Copyright @firefish 2022.\n\n", VER / 100, (VER / 10) % 10, VER % 10);
+  printf("Gone Fishing v%zu.%zu.%zu. Copyright @firefish 2022.\nRun with /d flag to destructure the save file.\n\n", VER / 100, (VER / 10) % 10, VER % 10);
 
   i = access("GONEFISH.SAV", 0); // F_OK ain't defined, so we use good ol' fashioned 0
   start:
