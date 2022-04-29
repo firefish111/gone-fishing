@@ -7,7 +7,7 @@
 #include "table.h"
 
 // semver version; insert dots after each digit
-const size_t VER = 202;
+const size_t VER = 203;
 
 unsigned char tier = 0x0;
 const int LEN = 9;
@@ -74,7 +74,10 @@ int main(int argc, char** argv) {
         printf("Returning to menu.\n");
         goto start;
       }
+    } else if (tempBuf[0] < VER) {
+      printf("Updating save from v%zu.%zu.%zu to v%zu.%zu.%zu.\n", tempBuf[0] / 100, (tempBuf[0] / 10) % 10, tempBuf[0] % 10, VER / 100, (VER / 10) % 10, VER % 10);
     }
+
     tier = (unsigned char) tempBuf[1];
     money = tempBuf[2];
     bait = tempBuf[LEN + 3];
