@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
         goto start;
       }
     } else if (tempBuf[0] < VER) {
-      printf("Updating save from v%zu.%zu.%zu to v%zu.%zu.%zu.\n", tempBuf[0] / 100, (tempBuf[0] / 10) % 10, tempBuf[0] % 10, VER / 100, (VER / 10) % 10, VER % 10);
+      printf("Updating save from v%zu.%zu.%zu to v%zu.%zu.%zu.\n\n", tempBuf[0] / 100, (tempBuf[0] / 10) % 10, tempBuf[0] % 10, VER / 100, (VER / 10) % 10, VER % 10);
     }
 
     tier = (unsigned char) tempBuf[1];
