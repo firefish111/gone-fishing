@@ -37,5 +37,7 @@ const float lv15[12] = {0, 0.06, 0.12, 0.17, 0.25, 0.3, 0.1, 0.25, 0.25, 0.25, 0
 
 const float * clump[16] = {lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12, lv13, lv14, lv15};
 
-const int sale[4] = {15, 25, 40, 70};
+// for high-value: pre 2.0.4 mechanic
+// const int sale[4] = {15, 25, 40, 70};
+const int sale[5] = {15, 12, 10, 8, 8};
 

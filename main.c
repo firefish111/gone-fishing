@@ -7,11 +7,12 @@
 #include "table.h"
 
 // semver version; insert dots after each digit
-const size_t VER = 203;
+const size_t VER = 204;
 
 unsigned char tier = 0x0;
 const int LEN = 9;
 const int COST = 21;
+const int YEAR = 2023;
 int choice;
 int i;
 size_t money = 0;
@@ -29,7 +30,7 @@ int main(int argc, char** argv) {
 
   srand(time(NULL));
 
-  printf("Gone Fishing v%zu.%zu.%zu. Copyright @firefish 2022.\nRun with /d flag to destructure the save file.\n\n", VER / 100, (VER / 10) % 10, VER % 10);
+  printf("Gone Fishing v%zu.%zu.%zu. Copyright @firefish %d.\nRun with /d flag to destructure the save file.\n\n", VER / 100, (VER / 10) % 10, VER % 10, YEAR);
 
   i = access("GONEFISH.SAV", 0); // F_OK ain't defined, so we use good ol' fashioned 0
   start:

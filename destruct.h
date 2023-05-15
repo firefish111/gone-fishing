@@ -1,5 +1,5 @@
 if (argc > 1 && strcmp(argv[1], "/d") == 0) {
-  printf("Gone Fishing v%zu.%zu.%zu savefile destructurer. Copyright firefish 2022.\n\n", VER / 100, (VER / 10) % 10, VER % 10);
+  printf("Gone Fishing v%zu.%zu.%zu savefile destructurer. Copyright firefish %d.\n\n", VER / 100, (VER / 10) % 10, VER % 10, YEAR);
 
   savefile = fopen("GONEFISH.SAV", "rb");
   if (!savefile) {
