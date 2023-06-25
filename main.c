@@ -6,8 +6,9 @@
 #include <conio.h> // needs this for getch() which is used instead of getchar()
 #include "table.h"
 
-// semver version; insert dots after each digit
-const size_t VER = 204;
+// semver version; insert dots after each nybble; max 15.15.15.rc6
+// last digit is subversion - f is none, 0-3 is alpha, 4-7 is beta, 8-14 is rc1-6
+const unsigned short VER = 0x2205;
 
 unsigned char tier = 0x0;
 const int LEN = 9;
@@ -24,13 +25,43 @@ FILE * savefile;
 #include "cast.h"
 #include "market.h"
 
+char* verBuf;
+#define VER_LEN 20
+
+char* mkver(unsigned short ver) {
+  memset(verBuf, '\0', VER_LEN);
+  sprintf(verBuf, "%hu.%hu.%hu", (ver >> 12) & 0x000f, (ver >> 8) & 0x000f, (ver >> 4) & 0x000f);
+  switch ((ver & 0x000f)) {
+  case 15:
+    break;
+  case 0:
+  case 1:
+  case 2:
+  case 3:
+    sprintf(verBuf + strlen(verBuf), "-alpha.%d", (ver & 0x000f) + 1);
+    break;
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+    sprintf(verBuf + strlen(verBuf), "-beta.%d", (ver & 0x000f) - 3);
+    break;
+  default:
+    sprintf(verBuf + strlen(verBuf), "-rc.%d", (ver & 0x000f) - 7);
+    break;
+  }
+  return verBuf;
+}
+
 int main(int argc, char** argv) {
+  verBuf = calloc(VER_LEN, sizeof(char));
+
   // save destructuror
   #include "destruct.h"
 
   srand(time(NULL));
 
-  printf("Gone Fishing v%zu.%zu.%zu. Copyright @firefish %d.\nRun with /d flag to destructure the save file.\n\n", VER / 100, (VER / 10) % 10, VER % 10, YEAR);
+  printf("Gone Fishing v%s. Copyright @firefish %d.\nRun with /d flag to destructure the save file.\n\n", mkver(VER), YEAR);
 
   i = access("GONEFISH.SAV", 0); // F_OK ain't defined, so we use good ol' fashioned 0
   start:
@@ -65,7 +96,7 @@ int main(int argc, char** argv) {
 
     // file format understander
     if (tempBuf[0] > VER) {
-      printf("You're trying to import a save from a newer version of Gone Fishing (%zu.%zu.%zu).\n\tAre you sure you want to import? (y/N)\n", tempBuf[0] / 100, (tempBuf[0] / 10) % 10, tempBuf[0] % 10);
+      printf("You're trying to import a save from a newer version of Gone Fishing (%s).\n\tAre you sure you want to import? (y/N)\n", mkver(tempBuf[0]));
 
       fflush(stdout);
       choice = getch();
@@ -76,7 +107,7 @@ int main(int argc, char** argv) {
         goto start;
       }
     } else if (tempBuf[0] < VER) {
-      printf("Updating save from v%zu.%zu.%zu to v%zu.%zu.%zu.\n\n", tempBuf[0] / 100, (tempBuf[0] / 10) % 10, tempBuf[0] % 10, VER / 100, (VER / 10) % 10, VER % 10);
+      printf("Updating save from v%s.\n\n", mkver(tempBuf[0]), mkver(VER));
     }
 
     tier = (unsigned char) tempBuf[1];
@@ -132,6 +163,7 @@ int main(int argc, char** argv) {
 
       free(tempBuf);
       free(data); // it's only 18 bytes but it matters
+      free(verBuf);
       return 0;
     default:
       cast();
